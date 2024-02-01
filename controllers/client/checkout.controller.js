@@ -73,5 +73,5 @@ module.exports.order = async (req, res) => {
     products: []
   });
 
-  res.send(`/checkout/success/${order.id}`);
+  res.redirect(`/checkout/success/${order.id}`);
 }
