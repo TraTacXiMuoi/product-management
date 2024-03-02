@@ -36,6 +36,8 @@ socket.on("SERVER_SEND_MESSAGE", (data) => {
 
   const div = document.createElement("div");
   let htmlFullName = "";
+  let htmlContent = "";
+  let htmlImages = "";
 
   if(myId != data.userId) {
     div.classList.add("inner-incoming");
@@ -44,9 +46,28 @@ socket.on("SERVER_SEND_MESSAGE", (data) => {
     div.classList.add("inner-outgoing");
   }
 
+  if(data.content) {
+    htmlContent = `
+      <div class="inner-content">${data.content}</div>
+    `;
+  }
+
+  if(data.images.length > 0) {
+    htmlImages += `<div class="inner-images">`;
+
+    for (const image of data.images) {
+      htmlImages += `
+        <img src="${image}">
+      `;
+    }
+
+    htmlImages += `</div>`;
+  }
+
   div.innerHTML = `
     ${htmlFullName}
-    <div class="inner-content">${data.content}</div>
+    ${htmlContent}
+    ${htmlImages}
   `;
 
   body.insertBefore(div, elementListTyping);
