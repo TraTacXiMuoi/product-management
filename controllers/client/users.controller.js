@@ -77,7 +77,8 @@ module.exports.accept = async (req, res) => {
 
 // [GET] /users/friends
 module.exports.friends = async (req, res) => {
-  const friendsListId = res.locals.user.friendsList.map(item => item.user_id);
+  const friendsList = res.locals.user.friendsList;
+  const friendsListId = friendsList.map(item => item.user_id);
   
   const users = await User.find({
     _id: { $in: friendsListId },
@@ -85,7 +86,10 @@ module.exports.friends = async (req, res) => {
     deleted: false
   }).select("id fullName avatar statusOnline");
 
-  console.log(users);
+  for (const user of users) {
+    const infoUser = friendsList.find(item => item.user_id == user.id);
+    user.roomChatId = infoUser.room_chat_id;
+  }
 
   res.render("client/pages/users/friends", {
     pageTitle: "Danh sách bạn bè",
